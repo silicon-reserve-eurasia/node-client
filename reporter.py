@@ -9,17 +9,17 @@ logger = logging.getLogger(__name__)
 
 class ApexReport(FPDF):
     def header(self):
-        # Logo or Header Text
+        # BRANDING UPDATE: Silicon Reserve Eurasia
         self.set_font('Courier', 'B', 14)
-        self.cell(0, 10, 'APEX CLEARING | INFRASTRUCTURE AUDIT DIV.', align='C', new_x="LMARGIN", new_y="NEXT")
+        self.cell(0, 10, 'SILICON RESERVE EURASIA | INFRASTRUCTURE AUDIT', align='C', new_x="LMARGIN", new_y="NEXT")
         self.ln(5)
 
     def footer(self):
         self.set_y(-15)
         self.set_font('Courier', 'I', 8)
-        self.cell(0, 10, 'This document acts as a preliminary technical assessment for the Apex Hashrate Swap Agreement.', align='C')
+        self.cell(0, 10, 'This document acts as a preliminary technical assessment for the Reserve Hashrate Swap Agreement.', align='C')
 
-def generate_report(nodes: List[Dict[str, Any]], filename: str = "Apex_Audit_Cert.pdf"):
+def generate_report(nodes: List[Dict[str, Any]], filename: str = "Silicon_Reserve_Audit.pdf"):
     """
     Generates a PDF report for the audited GPUs.
     """
@@ -71,22 +71,18 @@ def generate_report(nodes: List[Dict[str, Any]], filename: str = "Apex_Audit_Cer
 
     pdf.ln(10)
 
-    # Financial Hook
-    # We assume the overall tier is determined by the "worst" GPU or just take the first one for simplicity in this MVP.
-    # Or better, we show the hook based on the aggregate status. 
-    # For now, let's check if ANY GPU is Tier C, then the whole rig is restricted.
-    
+    # Financial Hook Logic
     is_tier_c = any(n.get("tier") == "Tier C" for n in nodes)
     
     pdf.set_font('Courier', 'B', 12)
     if not is_tier_c:
         # Tier B Hook
         pdf.set_fill_color(220, 255, 220) # Light Green
-        pdf.multi_cell(0, 15, "QUALIFIED FOR HIGH-YIELD PROGRAM.\nEST. YIELD: $2.10/hr", border=1, align='C', fill=True)
+        pdf.multi_cell(0, 15, "SILICON RESERVE SUBSIDY: QUALIFIED. EST. CREDIT: $2.10/hr", border=1, align='C', fill=True)
     else:
         # Tier C Hook
         pdf.set_fill_color(255, 220, 220) # Light Red
-        pdf.multi_cell(0, 15, "RESTRICTED MODE.\nEST. YIELD: $0.35/hr (Crypto Baseline)\nACTION REQUIRED: Upgrade PCIe Risers to x8 or higher.", border=1, align='C', fill=True)
+        pdf.multi_cell(0, 15, "SILICON RESERVE SUBSIDY: RESTRICTED. EST. CREDIT: $0.35/hr\nACTION REQUIRED: Upgrade PCIe risers to x8 or higher.", border=1, align='C', fill=True)
 
     try:
         pdf.output(filename)

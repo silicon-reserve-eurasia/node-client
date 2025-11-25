@@ -1,4 +1,3 @@
-import docker
 import time
 import logging
 
@@ -10,14 +9,21 @@ def run_container(image: str, command: str, use_gpu: bool = False, timeout: int 
     """
     Runs a Docker container with optional GPU support and a strict timeout.
     """
+    # CRITICAL FIX: Import inside function to prevent crash if SDK is missing
+    try:
+        import docker
+    except ImportError:
+        logger.error("Docker SDK (python-docker) is not installed.")
+        return "ERROR: DOCKER_SDK_MISSING"
+
     client = None
     container = None
     
     try:
         client = docker.from_env()
     except docker.errors.DockerException:
-        logger.error("Docker is not running or not installed.")
-        return "DOCKER_ERROR"
+        logger.error("Docker Engine is not running.")
+        return "ERROR: DOCKER_ENGINE_OFFLINE"
 
     try:
         # 1. Pull Image
